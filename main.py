@@ -20,7 +20,9 @@ class index (window_def):
     def load_cfg(self):
         data=self.load_cfg_json("cfg/main.json")
 
-        self.__dict_menu=data["menu"]
+        key = "menu"
+        if key in data:
+            self.__dict_menu=data["menu"]
 
 
     def gui2(self, frame):

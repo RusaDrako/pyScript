@@ -10,10 +10,12 @@ class window_def:
     title = "Имя не указано"
 
     def load_cfg_json(self, name):
-        data = {}
         print(self.__class__.__name__ + ": load json: " + name)
-        with open(name, encoding="utf-8") as file:
-            data = json.load(file)
+        try:
+            with open(name, encoding="utf-8") as file:
+                data = json.load(file)
+        except:
+            data = {}
 
         return data
 

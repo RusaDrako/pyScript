@@ -109,9 +109,15 @@ class scenario (window_def):
     def load_cfg(self):
         data=self.load_cfg_json("cfg/scenario.json")
 
-        self.__combobox_host=data["hosts"]
-        self.__combobox_geo=data["geo"]
-        self.__listbox_scenario_set=data["scenario_set"]
+        key = "host"
+        if key in data:
+            self.__combobox_host=data["hosts"]
+        key = "geo"
+        if key in data:
+            self.__combobox_geo=data["geo"]
+        key = "scenario_set"
+        if key in data:
+            self.__listbox_scenario_set=data["scenario_set"]
 
 
     def gui2(self, frame_main):
