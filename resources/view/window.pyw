@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.ttk import Frame, Button
+import json
 
 
 
@@ -8,8 +9,18 @@ class window_def:
     width = 200
     title = "Имя не указано"
 
+    def load_cfg_json(self, name):
+        data = {}
+        print(self.__class__.__name__ + ": load json: " + name)
+        with open(name, encoding="utf-8") as file:
+            data = json.load(file)
+
+        return data
+
+
+
     def gui(self):
-        print('open window: ' + type(self).__name__)
+        print(self.__class__.__name__ + ': open window')
         # Главное окно
         window = Tk()
         window.title(self.title)
@@ -34,7 +45,7 @@ class window_def:
         exit_btn.pack(fill=BOTH, expand=True)
 
         window.mainloop()
-        print('close window: ' + type(self).__name__)
+        print(self.__class__.__name__ + ': close window') #  + type(self).__name__
         return
 
     def gui2(self, frame):
