@@ -1,12 +1,12 @@
 from tkinter import *
 from tkinter.ttk import Frame, Button, Style, Combobox
 import importlib
+import json
 
 if __name__ == "__main__":
     import sys
     sys.path.insert(0, "..\\..\\")
 
-from scenarios._set._project import ProjectTest, ProjectSet, FirefoxEnv
 from resources.view.window import window_def
 
 
@@ -25,9 +25,15 @@ class scenario (window_def):
     }
 
     __combobox_size = {
-        "Средний": {"size": "mid"},
-        "Мобильный": {"size": "sm"},
-        "Максимальный": {"size": "max"}
+        "Базовый": {"w": "1024", "h": "800"},
+        "Мобильный": {"w": "360", "h": "760"},
+        "Bootstrap xs": {"w": "368", "h": "800"},
+        "Bootstrap sm": {"w": "580", "h": "800"},
+        "Bootstrap md": {"w": "770", "h": "800"},
+        "Bootstrap lg": {"w": "1000", "h": "800"},
+        "Bootstrap xl": {"w": "1210", "h": "800"},
+        "Bootstrap xxl": {"w": "1410", "h": "800"},
+        "Максимальный": {"type": "max"}
     }
 
     __combobox_host = {
@@ -70,6 +76,9 @@ class scenario (window_def):
             "platform": {},
             "browser": {},
         }
+
+        set_start["browser"]["type"]="firefox"
+
         combobox=self.form_feald["host"]
         key=combobox.get()
         set_start["platform"]["host"]=self.__combobox_host[key]
@@ -83,7 +92,6 @@ class scenario (window_def):
         key=combobox.get()
         if key in self.__combobox_geo:
             set_start["browser"]["geo"]=self.__combobox_geo[key]
-        print(set_start)
         return set_start
 
 
@@ -91,17 +99,17 @@ class scenario (window_def):
         listbox_scenario_set=self.form_feald["scenario_set"]
         ind = listbox_scenario_set.curselection()
         key = listbox_scenario_set.get(ind)
-        factory_env = FirefoxEnv()
+
         set_start = self.create_set_start()
-        factory_env.set = set_start["browser"]
-        env = factory_env.get()
-#        my_instance = getattr(self.__listbox_scenario_set[key]["module"], self.__listbox_scenario_set[key]["class"])(test_env=env, set_start=set_start["platform"])
-#        my_instance.run()
-        module_name = self.__listbox_scenario_set[key]["module"] # + "." + self.__listbox_scenario_set[key]["class"]
+        print()
+        print('set_start create:')
+        print(set_start)
+
+        module_name = self.__listbox_scenario_set[key]["module"]
         # Подгружаем модуль
         obj_module = importlib.import_module(module_name)
         my_class = getattr(obj_module, self.__listbox_scenario_set[key]["class"])
-        my_instance = my_class(test_env=env, set_start=set_start["platform"])
+        my_instance = my_class(set_start=set_start)
         # Обновляем вид
         my_instance.run()
 
