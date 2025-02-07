@@ -109,7 +109,7 @@ class scenario (window_def):
     def load_cfg(self):
         data=self.load_cfg_json("cfg/scenario.json")
 
-        key = "host"
+        key = "hosts"
         if key in data:
             self.__combobox_host=data["hosts"]
         key = "geo"
