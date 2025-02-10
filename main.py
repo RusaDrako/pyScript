@@ -8,8 +8,6 @@ from resources.view.window import window_def
 
 
 
-
-
 class index (window_def):
 
     __dict_menu = {}
@@ -17,6 +15,7 @@ class index (window_def):
     width = 200
     title = "pyScript"
 
+    ''' Загружает настройки формы '''
     def load_cfg(self, cfg_file_name):
         data=self.load_cfg_json(cfg_file_name)
 
@@ -25,6 +24,7 @@ class index (window_def):
             self.__dict_menu=data["menu"]
 
 
+    ''' Формирует форму GUI '''
     def gui2(self, frame):
 
         self.load_cfg("cfg/main.json")
@@ -54,6 +54,7 @@ class index (window_def):
 
         return
 
+    ''' Отработка нажатия кнопки (динамическая) '''
     def click_btn_menu(self, key, frame):
         print(self.__class__.__name__ + ": click_menu: " + key)
         # Очищаем динамичный фрайм
@@ -68,8 +69,6 @@ class index (window_def):
         # Обновляем вид
         my_instance.gui2(frame)
         print(self.__class__.__name__ + ": fin_click_menu")
-
-
 
 
 

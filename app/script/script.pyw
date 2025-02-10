@@ -13,13 +13,13 @@ from resources.view.window import window_def
 
 
 
-class scenario (window_def):
+class script (window_def):
 
     width = 200
     title = "Запуск сценариев"
 
-    __listbox_scenario_set = {
-        "Тестовый сценарий": {"module": "scenarios.test.scenario_test", "class": "scenario_test"},
+    __listbox_script_set = {
+        "Тестовый сценарий": {"module": "scripts.test.script_test", "class": "script_test"},
     }
 
     __combobox_geo = {
@@ -92,19 +92,19 @@ class scenario (window_def):
 
     ''' Запускает выполнение сценария '''
     def start_action(self):
-        listbox_scenario_set=self.form_feald["scenario_set"]
-        ind = listbox_scenario_set.curselection()
-        key = listbox_scenario_set.get(ind)
+        listbox_script_set=self.form_feald["script_set"]
+        ind = listbox_script_set.curselection()
+        key = listbox_script_set.get(ind)
 
         set_start = self.create_set_start()
         print()
         print('set_start create:')
         print(set_start)
 
-        module_name = self.__listbox_scenario_set[key]["module"]
+        module_name = self.__listbox_script_set[key]["module"]
         # Подгружаем модуль
         obj_module = importlib.import_module(module_name)
-        my_class = getattr(obj_module, self.__listbox_scenario_set[key]["class"])
+        my_class = getattr(obj_module, self.__listbox_script_set[key]["class"])
         my_instance = my_class(set_start=set_start)
         # Обновляем вид
         my_instance.run()
@@ -123,16 +123,16 @@ class scenario (window_def):
         if key in data:
             self.__combobox_geo=data["geo"]
 
-        key = "scenario_set"
+        key = "script_set"
         if key in data:
-            self.__listbox_scenario_set=data["scenario_set"]
+            self.__listbox_script_set=data["script_set"]
 
 
     ''' Формирует форму GUI '''
     def gui2(self, frame_main):
 
-        self.load_cfg("cfg/scenario.json")
-        self.load_cfg("cfg/___scenario.json")
+        self.load_cfg("cfg/script.json")
+        self.load_cfg("cfg/___script.json")
 
 
 
@@ -149,16 +149,16 @@ class scenario (window_def):
 
         frame_el = self.get_frame(frame_el_right, col=0, row=2, height=300, width=self.width)
 
-        upload_set_keys = list(self.__listbox_scenario_set.keys())
+        upload_set_keys = list(self.__listbox_script_set.keys())
         upload_set_var = Variable(value=upload_set_keys)
-        listbox_scenario_set = Listbox(frame_el, listvariable=upload_set_var)
-        listbox_scenario_set.configure(exportselection=False) # Чтобы фокус не слетал
-        listbox_scenario_set.select_set(0, 0)
-        listbox_scenario_set.grid(column=0, row=0, padx=5, pady=5)
-        listbox_scenario_set.pack(fill=BOTH, expand=1)
-        listbox_scenario_set.bind("<<ListboxSelect>>", lambda event: self.view_start_set())
+        listbox_script_set = Listbox(frame_el, listvariable=upload_set_var)
+        listbox_script_set.configure(exportselection=False) # Чтобы фокус не слетал
+        listbox_script_set.select_set(0, 0)
+        listbox_script_set.grid(column=0, row=0, padx=5, pady=5)
+        listbox_script_set.pack(fill=BOTH, expand=1)
+        listbox_script_set.bind("<<ListboxSelect>>", lambda event: self.view_start_set())
 
-        self.form_feald["scenario_set"]=listbox_scenario_set
+        self.form_feald["script_set"]=listbox_script_set
 
 
 

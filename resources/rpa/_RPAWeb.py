@@ -11,7 +11,7 @@ from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 
 
 '''Настройки сценария'''
-class scenario_start:
+class script_start:
 
     ENV_DRIVER_FIREFOX='firefox'
 
@@ -26,7 +26,7 @@ class scenario_start:
     def __init__ (self, start_set={}, driver_close=False):
 
         print()
-        print('scenario_start start_set:')
+        print('script_start start_set:')
         self.driver_close = driver_close
 
         browser_set=start_set['browser']
@@ -420,7 +420,7 @@ class AssertException(Exception):
 
 
 ''' Общие настройки скрипта '''
-class DefaultScript (scenario_start, ElementScriptSection, ActionScriptSection, AssertScriptSection):
+class DefaultScript (script_start, ElementScriptSection, ActionScriptSection, AssertScriptSection):
 
     def_env = None
 
@@ -428,7 +428,7 @@ class DefaultScript (scenario_start, ElementScriptSection, ActionScriptSection, 
         print()
         print(self.__class__.__name__)
 
-        scenario_start.__init__(self, start_set=set_start)
+        script_start.__init__(self, start_set=set_start)
 
         print()
         print("  Тест: " + type(self).__name__)

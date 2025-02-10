@@ -1,6 +1,6 @@
 {
   "menu": {
-    "adm": {"title":"Запуск сценария", "module": "app.scenario", "class": "scenario"},
+    "adm": {"title":"Запуск сценария", "module": "app.script", "class": "script"},
     "gui_elems": {"title":"Элементы GUI", "module": "app.test", "class": "elements"}
   }
 }
