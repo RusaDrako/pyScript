@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 from tkinter import *
 from tkinter.ttk import Frame, Button
 import json
@@ -9,10 +11,10 @@ class window_def:
     width = 200
     title = "Имя не указано"
 
-    def load_cfg_json(self, name):
-        print(self.__class__.__name__ + ": load json: " + name)
+    def load_cfg_json(self, cfg_file_name):
+        print(self.__class__.__name__ + ": load json: " + cfg_file_name)
         try:
-            with open(name, encoding="utf-8") as file:
+            with open(cfg_file_name, encoding="utf-8") as file:
                 data = json.load(file)
         except:
             data = {}

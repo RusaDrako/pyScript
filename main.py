@@ -17,8 +17,8 @@ class index (window_def):
     width = 200
     title = "pyScript"
 
-    def load_cfg(self):
-        data=self.load_cfg_json("cfg/main.json")
+    def load_cfg(self, cfg_file_name):
+        data=self.load_cfg_json(cfg_file_name)
 
         key = "menu"
         if key in data:
@@ -27,7 +27,8 @@ class index (window_def):
 
     def gui2(self, frame):
 
-        data=self.load_cfg()
+        self.load_cfg("cfg/main.json")
+        self.load_cfg("cfg/___main.json")
 
 
         # Динамический фрайм

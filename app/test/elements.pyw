@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 from tkinter import *
 from tkinter import Text, Listbox, Menu, Canvas
 from tkinter import ttk

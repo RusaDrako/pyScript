@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 from tkinter import *
 from tkinter.ttk import Frame, Button, Style, Combobox
 import importlib
@@ -17,7 +19,7 @@ class scenario (window_def):
     title = "Запуск сценариев"
 
     __listbox_scenario_set = {
-        "Тестовый сценарий": {"module": "app.mealty._test_m", "class": "index_Test"},
+        "Тестовый сценарий": {"module": "scenarios.test.scenario_test", "class": "scenario_test"},
     }
 
     __combobox_geo = {
@@ -56,21 +58,13 @@ class scenario (window_def):
     form_feald={}
 
 
-    def start_driver(self):
-        self.gui()
-        return
-
-    def tttt(self):
+    ''' Отображает json настроек для старта сценария '''
+    def view_start_set(self):
         self.form_feald["start_report"].config(text=json.dumps(self.create_set_start(), indent = 4))
         self.form_feald["start_report"].pack(fill="both")
 
-    def listbox_scenario_set(self):
-        listbox_scenario_set=self.form_feald["scenario_set"]
-        ind = listbox_scenario_set.curselection()
-        key = listbox_scenario_set.get(ind)
-        self.form_feald["scenario_set_var"].config(text=key)
 
-
+    ''' Фомирует json настроек для старта сценария '''
     def create_set_start(self):
         set_start={
             "platform": {},
@@ -92,9 +86,11 @@ class scenario (window_def):
         key=combobox.get()
         if key in self.__combobox_geo:
             set_start["browser"]["geo"]=self.__combobox_geo[key]
+
         return set_start
 
 
+    ''' Запускает выполнение сценария '''
     def start_action(self):
         listbox_scenario_set=self.form_feald["scenario_set"]
         ind = listbox_scenario_set.curselection()
@@ -114,23 +110,29 @@ class scenario (window_def):
         my_instance.run()
 
 
-    def load_cfg(self):
-        data=self.load_cfg_json("cfg/scenario.json")
+    ''' Загружает настройки формы '''
+    def load_cfg(self, cfg_file_name):
+
+        data=self.load_cfg_json(cfg_file_name)
 
         key = "hosts"
         if key in data:
             self.__combobox_host=data["hosts"]
+
         key = "geo"
         if key in data:
             self.__combobox_geo=data["geo"]
+
         key = "scenario_set"
         if key in data:
             self.__listbox_scenario_set=data["scenario_set"]
 
 
+    ''' Формирует форму GUI '''
     def gui2(self, frame_main):
 
-        self.load_cfg()
+        self.load_cfg("cfg/scenario.json")
+        self.load_cfg("cfg/___scenario.json")
 
 
 
@@ -154,7 +156,7 @@ class scenario (window_def):
         listbox_scenario_set.select_set(0, 0)
         listbox_scenario_set.grid(column=0, row=0, padx=5, pady=5)
         listbox_scenario_set.pack(fill=BOTH, expand=1)
-        listbox_scenario_set.bind("<<ListboxSelect>>", lambda event: self.tttt())
+        listbox_scenario_set.bind("<<ListboxSelect>>", lambda event: self.view_start_set())
 
         self.form_feald["scenario_set"]=listbox_scenario_set
 
@@ -180,7 +182,7 @@ class scenario (window_def):
 
         frame_el = self.get_frame(frame_el_left, col=0, row=2, height=20, width=self.width)
 
-        cb_header = Label(frame_el, text="Размер окна Браузера")
+        cb_header = Label(frame_el, text="Размер окна браузера")
         cb_header.place(x=0, y=0)
 
         frame_el = self.get_frame(frame_el_left, col=0, row=3, height=20, width=self.width)
@@ -227,6 +229,7 @@ class scenario (window_def):
         return
 
 
+    ''' Типовой метод создания frame для элементов '''
     def get_frame(self, parent_frame, col, row, width=100, height=20, spanrow=1, spancol=1):
 #        frame = Frame(parent_frame, height=height, width=width, relief=SOLID, borderwidth=0)
         frame = Frame(parent_frame, height=height, width=width)
