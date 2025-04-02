@@ -4,6 +4,7 @@ from tkinter import *
 from tkinter import Text, Listbox, Menu, Canvas
 from tkinter import ttk
 from tkinter.ttk import Button, Label, Entry, Checkbutton, Radiobutton, Frame, Combobox, Scrollbar, Treeview, Scale, Spinbox, Notebook, Style
+from tkinter import messagebox
 
 if __name__ == "__main__":
     import sys
@@ -35,7 +36,7 @@ from resources.view.window import window_def
 
 class elements (window_def):
 
-    width = 200
+    width = 350
     title = "GUI"
 
     __radio = {
@@ -62,6 +63,8 @@ class elements (window_def):
 
 
     def gui2(self, frame):
+
+        frame.master.master.title(self.title)
 
         frame_el = self.get_frame(frame)
 
@@ -137,11 +140,109 @@ class elements (window_def):
         combobox.bind("<<ComboboxSelected>>", lambda event: self.print_action(l_result, combobox.get()))
 
 
+        frame_el = self.get_frame(frame)
+
+        tr_header = Label(frame_el, text="Дерево")
+        tr_header.grid(column=0, row=0, padx=2, pady=2)
+        tr_header.pack(fill=BOTH, expand=1, padx=0)
+
+        frame_el = self.get_frame(frame, height=100)
+
+        tree = Treeview(frame_el, show="tree headings", selectmode="browse")
+        tree.pack(fill=BOTH, expand=1, padx=0)
+        tree.bind("<<TreeviewSelect>>", lambda event: self.print_action(l_result, tree.item(tree.selection()[0])))
+
+        tree.heading("#0", text="Отделы", anchor=NW)
+
+        tree.insert("", END, iid=1, text="Административный отдел", open=True)
+        tree.insert("", END, iid=2, text="IT-отдел", open=True)
+        tree.insert("", END, iid=3, text="Отдел продаж")
+
+        tree.insert(1, index=END, text="Tom")
+        tree.insert(2, index=END, text="Bob")
+        ind = tree.insert(2, index=END, text="Sam")
+        tree.insert(ind, index=END, text="Sam 1")
+        tree.insert(ind, index=END, text="Sam 2")
+
+        scrollbar = Scrollbar(tree, orient="vertical", command=tree.yview)
+        scrollbar.pack(side=RIGHT, fill=Y)
+        tree["yscrollcommand"]=scrollbar.set
+
+
+        frame_el = self.get_frame(frame)
+
+        tab_header = Label(frame_el, text="Таблица")
+        tab_header.grid(column=0, row=0, padx=2, pady=2)
+        tab_header.pack(fill=BOTH, expand=1, padx=0)
+
+        frame_el = self.get_frame(frame, height=150)
+
+        # определяем данные для отображения
+        people = [("Tom", 38, "tom@email.com"), ("Bob", 42, "bob@email.com"), ("Sam", 28, "sam@email.com")]
+
+        # определяем столбцы
+        columns = ("name", "age", "email")
+
+        table = Treeview(frame_el, columns=columns, show="headings", selectmode="browse")
+        table.pack(fill=BOTH, expand=1, padx=0)
+        table.bind("<<TreeviewSelect>>", lambda event: self.print_action(l_result, table.item(table.selection()[0])))
+
+        # определяем заголовки
+        table.heading("name", text="Имя", anchor=W, command=lambda: self.sort(0, False, table))
+        table.heading("age", text="Возраст", anchor=W, command=lambda: self.sort(1, False, table))
+        table.heading("email", text="Email", anchor=W, command=lambda: self.sort(2, False, table))
+
+        table.column("#1", stretch=True, width=100)
+        table.column("#2", stretch=True, width=100)
+        table.column("#3", stretch=True, width=200)
+
+        scrollbar = Scrollbar(table, orient="horizontal", command=table.xview)
+        scrollbar.pack(side=BOTTOM, fill=X)
+        table["xscrollcommand"]=scrollbar.set
+
+        # добавляем данные
+        for person in people:
+            table.insert("", END, values=person)
+
+
+        window = self.get_window(frame)
+        window.option_add("*tearOff", FALSE) # Отключаем пунктирную линию в меню
+
+        settings_menu = Menu()
+        settings_menu.add_command(label="Save", command=lambda: self.menu_click("Save"))
+        settings_menu.add_command(label="Open", command=lambda: self.menu_click("Open"))
+
+        file_menu = Menu()
+        file_menu.add_cascade(label="Settings", menu=settings_menu)
+        file_menu.add_separator()
+        file_menu.add_command(label="Exit", command=lambda: self.menu_click("Exit"))
+
+        main_menu = Menu()
+
+        main_menu.add_cascade(label="File", menu=file_menu)
+        main_menu.add_cascade(label="Settings", menu=settings_menu)
+        main_menu.add_cascade(label="Edit", command=lambda: self.menu_click("Edit"))
+        main_menu.add_cascade(label="View", command=lambda: self.menu_click("View"))
+
+        window.config(menu=main_menu)
+
+    def sort(self, col, reverse, tree):
+        # получаем все значения столбцов в виде отдельного списка
+        l = [(tree.set(k, col), k) for k in tree.get_children("")]
+        # сортируем список
+        l.sort(reverse=reverse)
+        # переупорядочиваем значения в отсортированном порядке
+        for index,  (_, k) in enumerate(l):
+            tree.move(k, "", index)
+        # в следующий раз выполняем сортировку в обратном порядке
+        tree.heading(col, command=lambda: self.sort(col, not reverse, tree))
 
     def print_action(self, r_header, text=''):
         r_header.config(text=f"Выбран {text}")
         print(text)
 
+    def menu_click(self, text):
+        messagebox.showinfo("GUI Python", f"Нажат пункт меню {text}")
 
 if __name__ == "__main__":
     index = elements()

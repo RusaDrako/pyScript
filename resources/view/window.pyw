@@ -23,6 +23,11 @@ class window_def:
 
 
 
+    def get_window(self, element):
+        return element.winfo_toplevel()
+
+
+
     def gui(self):
         print(self.__class__.__name__ + ': open window')
         # Главное окно

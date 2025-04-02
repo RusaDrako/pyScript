@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from tkinter import *
-from tkinter.ttk import Frame, Button, Style, Combobox
+from tkinter.ttk import Frame, Button, Style, Combobox, Scrollbar
 import importlib
 import json
 
@@ -55,13 +55,16 @@ class script (window_def):
         }
     }
 
-    form_feald={}
+    form_field={}
 
 
     ''' Отображает json настроек для старта сценария '''
     def view_start_set(self):
-        self.form_feald["start_report"].config(text=json.dumps(self.create_set_start(), indent = 4))
-        self.form_feald["start_report"].pack(fill="both")
+#        self.form_field["start_report"].config(text=json.dumps(self.create_set_start(), indent = 4))
+        self.form_field["start_report"]["state"] = NORMAL
+        self.form_field["start_report"].delete("1.0", END)
+        self.form_field["start_report"].insert(END, json.dumps(self.create_set_start(), indent = 4))
+        self.form_field["start_report"]["state"] = DISABLED
 
 
     ''' Фомирует json настроек для старта сценария '''
@@ -73,16 +76,16 @@ class script (window_def):
 
         set_start["browser"]["type"]="firefox"
 
-        combobox=self.form_feald["host"]
+        combobox=self.form_field["host"]
         key=combobox.get()
         set_start["platform"]["host"]=self.__combobox_host[key]
 
-        combobox=self.form_feald["size"]
+        combobox=self.form_field["size"]
         key=combobox.get()
         if key in self.__combobox_size:
             set_start["browser"]["size"]=self.__combobox_size[key]
 
-        combobox=self.form_feald["geo"]
+        combobox=self.form_field["geo"]
         key=combobox.get()
         if key in self.__combobox_geo:
             set_start["browser"]["geo"]=self.__combobox_geo[key]
@@ -92,7 +95,7 @@ class script (window_def):
 
     ''' Запускает выполнение сценария '''
     def start_action(self):
-        listbox_script_set=self.form_feald["script_set"]
+        listbox_script_set=self.form_field["script_set"]
         ind = listbox_script_set.curselection()
         key = listbox_script_set.get(ind)
 
@@ -128,8 +131,16 @@ class script (window_def):
             self.__listbox_script_set=data["script_set"]
 
 
+    ''' Обновление настроек формы (перезагрузка формы) '''
+    def update_set_form(self):
+
+        self.gui2(self.form_field["frame_main"])
+
+
     ''' Формирует форму GUI '''
     def gui2(self, frame_main):
+
+        self.form_field["frame_main"]=frame_main
 
         self.load_cfg("cfg/script.json")
         self.load_cfg("cfg/___script.json")
@@ -138,7 +149,8 @@ class script (window_def):
 
         frame_el_left = self.get_frame(frame_main, col=0, row=0, height=300, width=self.width)
         frame_el_right = self.get_frame(frame_main, col=1, row=0, height=300, width=self.width)
-        frame_el_bottom = self.get_frame(frame_main, col=0, row=1, height=300, width=self.width, spancol=2)
+        frame_el_right_2 = self.get_frame(frame_main, col=2, row=0, height=300, width=self.width)
+        frame_el_bottom = self.get_frame(frame_main, col=0, row=1, height=300, width=self.width, spancol=3)
 
 
 
@@ -147,7 +159,7 @@ class script (window_def):
         cb_header = Label(frame_el, text="Сценарий")
         cb_header.place(x=0, y=0)
 
-        frame_el = self.get_frame(frame_el_right, col=0, row=2, height=300, width=self.width)
+        frame_el = self.get_frame(frame_el_right, col=0, row=2, height=340, width=self.width)
 
         upload_set_keys = list(self.__listbox_script_set.keys())
         upload_set_var = Variable(value=upload_set_keys)
@@ -158,7 +170,7 @@ class script (window_def):
         listbox_script_set.pack(fill=BOTH, expand=1)
         listbox_script_set.bind("<<ListboxSelect>>", lambda event: self.view_start_set())
 
-        self.form_feald["script_set"]=listbox_script_set
+        self.form_field["script_set"]=listbox_script_set
 
 
 
@@ -176,7 +188,9 @@ class script (window_def):
         combobox.set(combobox_key_list[0])
         combobox.grid(column=0, row=0, padx=2, pady=2)
         combobox.pack(fill=BOTH, expand=1, padx=0)
-        self.form_feald["host"]=combobox
+        combobox.bind("<<ComboboxSelected>>", lambda event: self.view_start_set())
+
+        self.form_field["host"]=combobox
 
 
 
@@ -194,7 +208,9 @@ class script (window_def):
         combobox.set(combobox_key_list[0]) # = Combobox(frame_el_el, textvariable=combobox_var, values=combobox_key_list)
         combobox.grid(column=0, row=0, padx=2, pady=2)
         combobox.pack(fill=BOTH, expand=1, padx=0)
-        self.form_feald["size"]=combobox
+        combobox.bind("<<ComboboxSelected>>", lambda event: self.view_start_set())
+
+        self.form_field["size"]=combobox
 
 
 
@@ -209,15 +225,43 @@ class script (window_def):
         combobox_key_list=list(self.__combobox_geo.keys())
         combobox = Combobox(frame_el, values=combobox_key_list)
         combobox.pack(fill=BOTH, expand=1, padx=0)
-        self.form_feald["geo"]=combobox
- #       combobox.bind("<<ComboboxSelected>>", lambda event: self.combobox_select(cb_header, combobox_var))
+        combobox.bind("<<ComboboxSelected>>", lambda event: self.view_start_set())
+
+        self.form_field["geo"]=combobox
+#        combobox.bind("<<ComboboxSelected>>", lambda event: self.combobox_select(cb_header, combobox_var))
 
 
 
-        frame_el_empty = self.get_frame(frame_el_left, 0, 10, width=self.width, height=170)
-        cb_header = Label(frame_el_empty, text="Параметры запуска:", anchor="w", justify="left")
-        cb_header.place(x=5, y=5)
-        self.form_feald["start_report"]=cb_header
+        frame_el_empty = self.get_frame(frame_el_left, col=0, row=6, height=170, width=self.width)
+
+
+
+        frame_el = self.get_frame(frame_el_right_2, col=0, row=0, height=20, width=self.width*2)
+
+        cb_header = Label(frame_el, text="Параметры запуска")
+        cb_header.place(x=0, y=0)
+
+        frame_el_text = self.get_frame(frame_el_right_2, col=0, row=1, height=340, width=self.width*2)
+
+        editor = Text(frame_el_text, height=20, width=47, wrap="none", state=DISABLED)
+        editor.grid(column = 0, row = 0, sticky = NSEW) #.pack(fill=BOTH, expand=1)
+
+        scrollbar_y = Scrollbar(frame_el_text, orient="vertical", command=editor.yview)
+        scrollbar_y.grid(column = 1, row = 0, sticky = NS)
+        editor["yscrollcommand"] = scrollbar_y.set
+
+        scrollbar_x = Scrollbar(frame_el_text, orient="horizontal", command=editor.xview)
+        scrollbar_x.grid(column = 0, row = 1, sticky = EW)
+        editor["xscrollcommand"] = scrollbar_x.set
+
+        self.form_field["start_report"] = editor
+
+
+        frame_el = self.get_frame(frame_el_left, col=0, row=11, height=30, width=self.width)
+
+        btn = Button(frame_el, text="Обновить настройки", command=lambda: self.update_set_form())
+        btn.grid(column=0, row=0, padx=2, pady=2)
+        btn.pack(fill=BOTH, expand=1, padx=0)
 
 
         frame_el = self.get_frame(frame_el_bottom, col=0, row=1, height=30, width=self.width * 2)
