@@ -1,0 +1,23 @@
+{
+  "hosts": {
+    "ya": {
+      "protocol": "https",
+      "login": "",
+      "password": "",
+      "host": "yandex.ru",
+      "port": ""
+    }
+  },
+
+  "geo": {
+    "Москва": {"lat": "55.755863", "lng": "37.617700"},
+    "Питер": {"lat": "59.950163", "lng": "30.316618"}
+  },
+
+  "script_set": {
+    "Карты": {
+      "module": "scripts.test.ya_map_test",
+      "class": "ya_map"
+    }
+  }
+}

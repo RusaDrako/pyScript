@@ -54,20 +54,21 @@ class script_start:
         driver=self.get_driver()
 
         # Устанавливаем размер окна
-        size=browser_set['size']
-        key = "w"
-        if key in size:
-            key = "h"
+        if 'size' in browser_set:
+            size=browser_set['size']
+            key = "w"
             if key in size:
-                driver.set_window_size(size["w"], size["h"])
+                key = "h"
+                if key in size:
+                    driver.set_window_size(size["w"], size["h"])
 
-        # Позиция на экране
-        driver.set_window_position(0,0)
+            # Позиция на экране
+            driver.set_window_position(0,0)
 
-        # Развернуть на всё окно
-        key = "type"
-        if key in size:
-            driver.maximize_window()
+            # Развернуть на всё окно
+            key = "type"
+            if key in size:
+                driver.maximize_window()
 
 
         print("  selenium: " + selenium.__version__)
