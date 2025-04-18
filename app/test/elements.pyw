@@ -62,9 +62,8 @@ class elements (window_def):
 
 
 
+    @window_def._decorator_gui2
     def gui2(self, frame):
-
-        frame.master.master.title(self.title)
 
         frame_el = self.get_frame(frame)
 

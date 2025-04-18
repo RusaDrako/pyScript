@@ -25,6 +25,7 @@ class index (window_def):
 
 
     ''' Формирует форму GUI '''
+    @window_def._decorator_gui2
     def gui2(self, frame):
 
         self.load_cfg("cfg/main.json")

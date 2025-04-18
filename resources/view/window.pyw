@@ -32,7 +32,6 @@ class window_def:
         print(self.__class__.__name__ + ': open window')
         # Главное окно
         window = Tk()
-        window.title(self.title)
         window.resizable(width=False, height=False)
 
         # Главный фрайм
@@ -57,6 +56,14 @@ class window_def:
         print(self.__class__.__name__ + ': close window') #  + type(self).__name__
         return
 
+    def _decorator_gui2(func):
+        def decorator(self, frame):
+            obj=self.get_window(frame)
+            obj.title(self.title)
+            func(self, frame)
+        return decorator
+
+    @_decorator_gui2
     def gui2(self, frame):
         return
 

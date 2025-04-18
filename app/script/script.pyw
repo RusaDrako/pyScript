@@ -138,6 +138,7 @@ class script (window_def):
 
 
     ''' Формирует форму GUI '''
+    @window_def._decorator_gui2
     def gui2(self, frame_main):
 
         self.form_field["frame_main"]=frame_main
